@@ -10,14 +10,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float _jumpPower;
     [SerializeField] float _horizontalPower;
     Rigidbody2D _playerRb;
+    float horizontalInput;
 
     void Start()
     {
         _playerRb = transform.GetComponent<Rigidbody2D>();
     }
     // Update is called once per frame
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
+        transform.GetComponent<Animator>().SetTrigger("JumpAnimTrigger");
         if (collision.collider.CompareTag("Platform"))
         {
             _playerRb.velocity += Vector2.up * _jumpPower;
@@ -31,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void HorizontalMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * _horizontalPower;
+        horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * _horizontalPower;
         _playerRb.velocity += new Vector2(horizontalInput, 0);
     }
 }
