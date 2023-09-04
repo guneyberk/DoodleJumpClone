@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.GetComponent<Animator>().SetTrigger("JumpAnimTrigger");
+        //transform.GetComponent<Animator>().SetTrigger("JumpAnimTrigger");
         if (collision.collider.CompareTag("Platform"))
         {
             _playerRb.velocity += Vector2.up * _jumpPower;
