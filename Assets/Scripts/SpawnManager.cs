@@ -1,33 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject _simplePlatforms;
-    public GameObject _brokenPlatforms;
+    public GameObject[] simplePlatforms;
+
+    int _activePlatformCount = 10;
+
+    static int arrayPlatform = 0;
 
     private void Awake()
     {
-       
-        for (int i = 0; i < 10; i++)
-        {
-            
-            int j=Random.Range(0, _simplePlatforms.transform.childCount);
 
-            _simplePlatforms.transform.GetChild(j).gameObject.SetActive(true);
+
+        for (int i = 0; i < _activePlatformCount; i++)
+        {
+
+            int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
+
+            simplePlatforms[arrayPlatform].transform.GetChild(j).gameObject.SetActive(true);
 
         }
-    
+
     }
 
 
-    // Update is called once per frame
-    void Update()
+    public void ActivatePlatform()
     {
+        //arrayPlatform++;
+        simplePlatforms[arrayPlatform].transform.position = new Vector3(1, 2.125f, 0);
+        int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
+        simplePlatforms[arrayPlatform].transform.GetChild(j).gameObject.SetActive(true);
         
-        
+
     }
+
+
 }

@@ -13,13 +13,13 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
 
     void Start()
-    {
+    { 
         _playerRb = transform.GetComponent<Rigidbody2D>();
+        _playerRb.velocity += Vector2.up * _jumpPower;
     }
     // Update is called once per frame
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        //transform.GetComponent<Animator>().SetTrigger("JumpAnimTrigger");
         if (collision.collider.CompareTag("Platform"))
         {
             _playerRb.velocity += Vector2.up * _jumpPower;
