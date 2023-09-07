@@ -11,5 +11,15 @@ public class PlayerCamera : MonoBehaviour
     {
         _player = GameObject.Find("Player");
     }
-    void FixedUpdate() => Camera.main.transform.position = new Vector3(0,0,-2.5f)+Vector3.Lerp(_player.transform.position, Camera.main.transform.position, 0.5f);
+    void FixedUpdate()
+    {
+        //Debug.Log(Vector3.Dot(_player.transform.position, transform.position));
+        //if (Vector3.Dot(_player.transform.position, transform.position) == 0)
+        //{
+
+            Camera.main.transform.position = new Vector3(0, 0, -2.5f) + Vector3.Lerp(_player.transform.position, Camera.main.transform.position, 0.5f);
+        //}
+
+
+    }
 }
