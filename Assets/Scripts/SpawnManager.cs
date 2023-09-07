@@ -6,10 +6,10 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] simplePlatforms;
 
     int _activePlatformCount = 30;
-    float _midPlatformVector = Mathf.Infinity;
+    float _midPlatformVector = 0;
     GameObject _midPlatform;
 
-    static int arrayPlatform = 0;
+    static int arrayPlatform = 1;
     GameObject _player;
 
     private void Awake()
@@ -23,16 +23,17 @@ public class SpawnManager : MonoBehaviour
 
     private void Update()
     {
+       
         for (int k = 0; k < simplePlatforms.Length; k++)
         {
-            if (Vector3.Distance(_player.transform.position, simplePlatforms[k].transform.position) <= _midPlatformVector)
+            if (Vector3.Distance(_player.transform.position, simplePlatforms[k].transform.position) >= _midPlatformVector)
             {
-                Debug.Log(k);
                 _midPlatformVector = Vector3.Distance(_player.transform.position, simplePlatforms[k].transform.position);
                 _midPlatform = simplePlatforms[k];
+                arrayPlatform = k;
 
             }
-            if (Vector3.Distance(_player.transform.position, _midPlatform.transform.position) <= 4f)
+            if (Vector3.Distance(_player.transform.position, _midPlatform.transform.position) <= 8f)
             {
                 ActivatePlatform();
             }
@@ -52,7 +53,7 @@ public class SpawnManager : MonoBehaviour
             simplePlatforms[arrayPlatform].transform.GetChild(i).gameObject.SetActive(false);
         }
 
-        simplePlatforms[arrayPlatform].transform.position = new Vector3(0, _midPlatform.transform.position.y + 8f, 0);
+        simplePlatforms[arrayPlatform].transform.position = new Vector3(0, simplePlatforms[arrayPlatform].transform.position.y + 8f, 0);
         for (int i = 0; i < _activePlatformCount; i++)
         {
             int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
