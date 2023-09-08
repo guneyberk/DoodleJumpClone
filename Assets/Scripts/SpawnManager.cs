@@ -1,3 +1,5 @@
+using System.Diagnostics.Tracing;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,54 +8,44 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] simplePlatforms;
 
     int _activePlatformCount = 30;
-    float _midPlatformVector = 0;
-    GameObject _midPlatform;
-
-    static int arrayPlatform = 1;
-    GameObject _player;
+    private GameObject _currentPlatform;
 
     private void Awake()
     {
-        for (int i = 0; i < _activePlatformCount; i++)
+        for (int i = 0; i < simplePlatforms.Length; i++)
         {
-            int j = Random.Range(0, simplePlatforms[0].transform.childCount);
-            simplePlatforms[0].transform.GetChild(j).gameObject.SetActive(true);
+            for (int k = 0; k < _activePlatformCount; k++)
+            {
+                int j = Random.Range(0, simplePlatforms[i].transform.childCount);
+                simplePlatforms[i].transform.GetChild(j).gameObject.SetActive(true);
+            }
+
         }
     }
 
+ 
     private void Update()
     {
-       
-        for (int k = 0; k < simplePlatforms.Length; k++)
+        for (int i = 0; i < simplePlatforms.Length; i++)
         {
-            if (Vector3.Distance(_player.transform.position, simplePlatforms[k].transform.position) >= _midPlatformVector)
+            if (simplePlatforms[i].transform.position.y <= -8f)
             {
-                _midPlatformVector = Vector3.Distance(_player.transform.position, simplePlatforms[k].transform.position);
-                _midPlatform = simplePlatforms[k];
-                arrayPlatform = k;
+                ActivatePlatform(i);
+            }
 
-            }
-            if (Vector3.Distance(_player.transform.position, _midPlatform.transform.position) <= 8f)
-            {
-                ActivatePlatform();
-            }
         }
     }
-    private void Start()
-    {
-        _player = GameObject.Find("Player");
-        _player.transform.position = new Vector3(0,1,0);
-    }
 
+  
 
-    private void ActivatePlatform()
+    private void ActivatePlatform(int arrayPlatform)
     {
         for (int i = 0; i < simplePlatforms[arrayPlatform].transform.childCount; i++)
         {
             simplePlatforms[arrayPlatform].transform.GetChild(i).gameObject.SetActive(false);
         }
 
-        simplePlatforms[arrayPlatform].transform.position = new Vector3(0, simplePlatforms[arrayPlatform].transform.position.y + 8f, 0);
+        simplePlatforms[arrayPlatform].transform.position = new Vector3(0, simplePlatforms[arrayPlatform].transform.position.y + 24f, 0);
         for (int i = 0; i < _activePlatformCount; i++)
         {
             int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
