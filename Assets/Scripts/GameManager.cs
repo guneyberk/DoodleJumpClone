@@ -15,6 +15,13 @@ public class GameManager : MonoBehaviour
         _player = GameObject.Find("Player");
     }
 
+    public void GameOver()
+    {
+        _gameOverText.gameObject.SetActive(true);
+        Time.timeScale = 0;
+
+    }
+
 
    
 }

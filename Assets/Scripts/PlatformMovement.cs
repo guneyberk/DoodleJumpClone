@@ -4,7 +4,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlatformMovement : MonoBehaviour
 {
-    public Text _gameOverText;
+   float _platformMovementSpeed = 0.1f;
 
 
 
@@ -19,10 +19,8 @@ public class PlatformMovement : MonoBehaviour
     private void PlatformVelocity()
     {
 
-        transform.Translate(Vector3.down * Time.deltaTime, Space.World);
+        transform.Translate(Vector3.down * Time.deltaTime* _platformMovementSpeed, Space.World);
     }
-
-    
 
 
 

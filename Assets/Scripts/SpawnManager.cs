@@ -6,9 +6,8 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject[] simplePlatforms;
-
+    GameObject _player;
     int _activePlatformCount = 30;
-    private GameObject _currentPlatform;
 
     private void Awake()
     {
@@ -16,6 +15,7 @@ public class SpawnManager : MonoBehaviour
         {
             for (int k = 0; k < _activePlatformCount; k++)
             {
+
                 int j = Random.Range(0, simplePlatforms[i].transform.childCount);
                 simplePlatforms[i].transform.GetChild(j).gameObject.SetActive(true);
             }
@@ -23,9 +23,14 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
- 
+    private void Start()
+    {
+        _player=GameObject.Find("Player");
+    }
     private void Update()
     {
+        Vector2 relativePos = _player.transform.position - simplePlatforms[2].transform.position;
+        Debug.Log(Vector2.Dot(_player.transform.position, relativePos)) ;
         for (int i = 0; i < simplePlatforms.Length; i++)
         {
             if (simplePlatforms[i].transform.position.y <= -8f)

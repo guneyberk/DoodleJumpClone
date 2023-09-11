@@ -12,7 +12,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D _playerRb;
     float horizontalInput;
 
-    public Text _gameOverText;
+    public UnityEvent _gameOverScreen;
+
 
 
     void Start()
@@ -42,9 +43,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnBecameInvisible()
     {
-
-        _gameOverText.gameObject.SetActive(true);
-        Time.timeScale = 0;
+        _gameOverScreen.Invoke();
+       
 
     }
 }
