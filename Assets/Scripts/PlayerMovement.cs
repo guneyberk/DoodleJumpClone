@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D _playerRb;
     float horizontalInput;
 
+    public Text _gameOverText;
+
+
     void Start()
     { 
         _playerRb = transform.GetComponent<Rigidbody2D>();
@@ -35,5 +38,13 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * _horizontalPower;
         _playerRb.velocity += new Vector2(horizontalInput, 0);
+    }
+
+    private void OnBecameInvisible()
+    {
+
+        _gameOverText.gameObject.SetActive(true);
+        Time.timeScale = 0;
+
     }
 }
