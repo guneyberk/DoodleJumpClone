@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using TMPro;
 using Unity.VisualScripting;
@@ -5,8 +7,9 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public GameObject brokenPlatform;
+    int _brokenPlatformCount = 10;
     public GameObject[] simplePlatforms;
-    GameObject _player;
     int _activePlatformCount = 30;
 
     private void Awake()
@@ -17,20 +20,16 @@ public class SpawnManager : MonoBehaviour
             {
 
                 int j = Random.Range(0, simplePlatforms[i].transform.childCount);
-                simplePlatforms[i].transform.GetChild(j).gameObject.SetActive(true);
+                simplePlatforms[0].transform.GetChild(0).position = simplePlatforms[i].transform.GetChild(j).transform.position;
+                simplePlatforms[0].transform.GetChild(0).gameObject.SetActive(true);
             }
 
         }
     }
 
-    private void Start()
-    {
-        _player=GameObject.Find("Player");
-    }
     private void Update()
     {
-        Vector2 relativePos = _player.transform.position - simplePlatforms[2].transform.position;
-        Debug.Log(Vector2.Dot(_player.transform.position, relativePos)) ;
+       
         for (int i = 0; i < simplePlatforms.Length; i++)
         {
             if (simplePlatforms[i].transform.position.y <= -8f)
@@ -45,6 +44,7 @@ public class SpawnManager : MonoBehaviour
 
     private void ActivatePlatform(int arrayPlatform)
     {
+        _brokenPlatformCount++;
         for (int i = 0; i < simplePlatforms[arrayPlatform].transform.childCount; i++)
         {
             simplePlatforms[arrayPlatform].transform.GetChild(i).gameObject.SetActive(false);
@@ -56,6 +56,9 @@ public class SpawnManager : MonoBehaviour
             int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
             simplePlatforms[arrayPlatform].transform.GetChild(j).gameObject.SetActive(true);
         }
+
     }
+
+    
 
 }
