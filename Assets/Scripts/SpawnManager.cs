@@ -9,6 +9,7 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject brokenPlatform;
     int _brokenPlatformCount = 10;
+    public GameObject[] spawnPoints;
     public GameObject[] simplePlatforms;
     int _activePlatformCount = 30;
 
@@ -20,8 +21,8 @@ public class SpawnManager : MonoBehaviour
             {
 
                 int j = Random.Range(0, simplePlatforms[i].transform.childCount);
-                simplePlatforms[0].transform.GetChild(0).position = simplePlatforms[i].transform.GetChild(j).transform.position;
-                simplePlatforms[0].transform.GetChild(0).gameObject.SetActive(true);
+                brokenPlatform.transform.position = simplePlatforms[2].transform.GetChild(2).transform.position;
+                //simplePlatforms[0].transform.GetChild(0).gameObject.SetActive(true);
             }
 
         }
