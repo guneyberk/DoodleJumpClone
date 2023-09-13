@@ -7,22 +7,25 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject brokenPlatform;
-    int _brokenPlatformCount = 10;
-    public GameObject[] spawnPoints;
-    public GameObject[] simplePlatforms;
-    int _activePlatformCount = 30;
+    [SerializeField] GameObject _spawnPoints;
+    GameObject _player;
+    List<GameObject> _platform = new List<GameObject>();
+    int _activePlatformCount = 50;
 
-    private void Awake()
+    private void Start()
     {
-        for (int i = 0; i < simplePlatforms.Length; i++)
+        _player = GameObject.Find("Player");
+        for (int i = 0; i < _activePlatformCount; i++)
         {
-            for (int k = 0; k < _activePlatformCount; k++)
+            GameObject platform = ObjectPooling.instance.GetPooledObjects();
+            if (platform != null)
             {
+                int j = Random.Range(0, _spawnPoints.transform.childCount);
+                platform.transform.position = _spawnPoints.transform.GetChild(j).transform.position;
+                platform.SetActive(true);
+                _platform.Add(platform);
 
-                int j = Random.Range(0, simplePlatforms[i].transform.childCount);
-                brokenPlatform.transform.position = simplePlatforms[2].transform.GetChild(2).transform.position;
-                //simplePlatforms[0].transform.GetChild(0).gameObject.SetActive(true);
+
             }
 
         }
@@ -30,36 +33,22 @@ public class SpawnManager : MonoBehaviour
 
     private void Update()
     {
-       
-        for (int i = 0; i < simplePlatforms.Length; i++)
-        {
-            if (simplePlatforms[i].transform.position.y <= -8f)
-            {
-                ActivatePlatform(i);
-            }
+        SpawnPointsFollow();
+        InactivatePlatforms();
 
-        }
     }
 
-  
 
-    private void ActivatePlatform(int arrayPlatform)
+    private void InactivatePlatforms()
     {
-        _brokenPlatformCount++;
-        for (int i = 0; i < simplePlatforms[arrayPlatform].transform.childCount; i++)
+        for (int i = 0; i < _platform.Count; i++)
         {
-            simplePlatforms[arrayPlatform].transform.GetChild(i).gameObject.SetActive(false);
+            Vector3 relativePos = _platform[i].transform.position - _player.transform.position;
+            if (Vector3.Dot(_player.transform.up, relativePos) < -2.0f)
+            {
+                _platform[i].gameObject.SetActive(false);
+            }
         }
-
-        simplePlatforms[arrayPlatform].transform.position = new Vector3(0, simplePlatforms[arrayPlatform].transform.position.y + 24f, 0);
-        for (int i = 0; i < _activePlatformCount; i++)
-        {
-            int j = Random.Range(0, simplePlatforms[arrayPlatform].transform.childCount);
-            simplePlatforms[arrayPlatform].transform.GetChild(j).gameObject.SetActive(true);
-        }
-
     }
-
-    
-
+    private void SpawnPointsFollow() => _spawnPoints.transform.position = new Vector3(0, Camera.main.transform.position.y, 0);
 }
