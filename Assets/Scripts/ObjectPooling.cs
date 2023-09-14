@@ -8,7 +8,7 @@ public class ObjectPooling : MonoBehaviour
     public static ObjectPooling instance;
 
     private List<GameObject> pooledObjects= new List<GameObject>();
-    private int amountToPool = 50;
+    private int amountToPool = 30;
 
     [SerializeField] private GameObject platformPrefab;
     [SerializeField] private GameObject brokenPlatformPrefab;
@@ -17,6 +17,8 @@ public class ObjectPooling : MonoBehaviour
     {
         if(instance == null)
             instance = this;
+
+
     }
    
     void Start()
