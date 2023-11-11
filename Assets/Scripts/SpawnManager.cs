@@ -1,85 +1,106 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] GameObject _spawnPoints;
-    [SerializeField] GameObject _spawnPointsFirst;
+    [SerializeField] GameObject[] _spawnPoints;
+    [SerializeField] List<GameObject> _spawnList;
     GameObject _player;
-    List<GameObject> _platform = new List<GameObject>();
-    int _activePlatformCount = 30;
-   
+    public static int _platformCount = 60;
 
-
+    [ContextMenu("SpawnPlatforms")]
     private void Start()
     {
         _player = GameObject.Find("Player");
-
-        for (int i = 0; i < _activePlatformCount; i++)
+        foreach (var item in _spawnPoints)
         {
-            GameObject platform = ObjectPooling.instance.GetPooledObjects();
-
-            if (platform != null)
+            for (int i = 0; i < _platformCount / 2; i++)
             {
-                int j = Random.Range(0, _spawnPoints.transform.childCount);
-                platform.transform.position = _spawnPointsFirst.transform.GetChild(j).transform.position;
-                platform.SetActive(true);
-                _platform.Add(platform);
+                int rndPlatform = Random.Range(0, item.transform.childCount);
+                if (item.transform.GetChild(rndPlatform).gameObject.activeInHierarchy)
+                {
+                    _spawnList.Add(ObjectPooling.Instance.SpawnFromPool("Platfrom", item.transform.GetChild(rndPlatform).transform.position, Quaternion.identity));
+                    item.transform.GetChild(rndPlatform).gameObject.SetActive(false);
 
-
+                }
             }
 
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        for (int i = 0; i < _platform.Count; i++)
-        {
-            if (!_platform[i].activeInHierarchy)
-            {
-                SpawnPlatforms();
-            }
 
-        }
-        
-        SpawnPointsFollow();
-        InactivatePlatforms();
+        SpawnPoints();
 
     }
 
-    private void SpawnPlatforms()
+    private void SpawnPoints()
     {
-        GameObject platform = ObjectPooling.instance.GetPooledObjects();
 
-        if (platform != null)
+        for (int i = 0; i < _spawnPoints.Length; i++)
         {
-            int j = Random.Range(0, _spawnPoints.transform.childCount);
-            platform.transform.position = _spawnPoints.transform.GetChild(j).transform.position;
-            platform.SetActive(true);
-            _spawnPoints.transform.GetChild(j).gameObject.SetActive(false);
-            _platform.Add(platform);
-            
-
-
-        }
-    }
-
-    private void InactivatePlatforms()
-    {
-        for (int i = 0; i < _platform.Count; i++)
-        {
-            Vector3 relativePos = _platform[i].transform.position - _player.transform.position;
-            if (Vector3.Dot(_player.transform.up, relativePos) < -2.0f)
+            Vector3 relativepos = _spawnPoints[i].transform.position - _player.transform.position;
+            if (Vector3.Dot(_player.transform.up, relativepos) <= -4.5f)
             {
-                _platform[i].gameObject.SetActive(false);
-                
+                float spawnPointDistance = PositionSpawnPoints();
+                _spawnPoints[i].transform.position = new Vector3(0, spawnPointDistance + 5f, 0);
+
+                SpawnPlatforms(i);
+
             }
         }
     }
-    private void SpawnPointsFollow() => _spawnPoints.transform.position = new Vector3(0, Camera.main.transform.position.y, 0);
+
+    void SpawnPlatforms(int j)
+    {
+        for (int i = 0; i < _spawnPoints[j].transform.childCount; i++)
+        {
+            if (!_spawnPoints[j].transform.GetChild(i).gameObject.activeInHierarchy)
+            {
+                _spawnPoints[j].transform.GetChild(i).gameObject.SetActive(true);
+            }
+
+        }
+
+
+        for (int i = 0; i < _platformCount / 2; i++)
+        {
+            int rndPlatform = Random.Range(0, _spawnPoints[j].transform.childCount);
+            if (_spawnPoints[j].transform.GetChild(rndPlatform).gameObject.activeInHierarchy)
+            {
+                ObjectPooling.Instance.SpawnFromPool("Platfrom", _spawnPoints[j].transform.GetChild(rndPlatform).transform.position, Quaternion.identity);
+                _spawnPoints[j].transform.GetChild(rndPlatform).gameObject.SetActive(false);
+                GameManager.score++;
+            }
+            else
+            {
+                rndPlatform = Random.Range(0, _spawnPoints[j].transform.childCount);
+                ObjectPooling.Instance.SpawnFromPool("Platfrom", _spawnPoints[j].transform.GetChild(rndPlatform).transform.position, Quaternion.identity);
+                _spawnPoints[j].transform.GetChild(rndPlatform).gameObject.SetActive(false);
+                GameManager.score++;
+
+            }
+        }
+    }
+
+
+    public float PositionSpawnPoints()
+    {
+        float spawnPointDistance = 0;
+        for (int i = 0; i < _spawnPoints.Length; i++)
+        {
+            Vector3 relativePos = _spawnPoints[i].transform.position - _player.transform.position;
+            if (Vector3.Dot(_player.transform.up, relativePos) >= spawnPointDistance)
+            {
+                spawnPointDistance = _spawnPoints[i].transform.position.y;
+
+            }
+
+        }
+        return spawnPointDistance;
+
+    }
+
+
 }

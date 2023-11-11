@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayerCamera : MonoBehaviour
 {
     private GameObject _player;
     private Vector3 _lerpedPosition;
-    private float _oldPosition;
 
     private void Start()
     {
@@ -25,4 +22,6 @@ public class PlayerCamera : MonoBehaviour
         }
 
     }
+
+   
 }
